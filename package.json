@@ -13,7 +13,8 @@
     "react-dom": "^19.0.0",
     "lucide-react": "^0.511.0",
     "jspdf": "^2.5.2",
-    "bwip-js": "^4.5.1"
+    "bwip-js": "^4.5.1",
+    "@supabase/supabase-js": "^2.49.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
