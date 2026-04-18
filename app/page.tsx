@@ -12,15 +12,15 @@ function AppContent() {
 
       {/* Navigation */}
       <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-soft">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
             <Image
               src="/whiteexpresslogo.png"
               alt="White Express"
-              width={200}
-              height={56}
-              className="h-12 w-auto object-contain"
+              width={280}
+              height={80}
+              className="h-16 w-auto object-contain"
               priority
             />
           </div>
