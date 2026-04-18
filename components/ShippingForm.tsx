@@ -104,7 +104,14 @@ export default function ShippingForm() {
     if (!validate()) return;
     setLoading(true);
     try {
-      const uri = await generateLabelPDF(form);
+      const [uri] = await Promise.all([
+        generateLabelPDF(form),
+        fetch("/api/labels", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        }),
+      ]);
       setPdfUri(uri);
     } catch (err) {
       console.error("PDF generation failed:", err);
