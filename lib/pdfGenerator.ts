@@ -56,6 +56,7 @@ async function loadLogo(): Promise<HTMLImageElement | null> {
 
 async function buildBarcode(text: string): Promise<HTMLCanvasElement | null> {
   try {
+    // @ts-ignore
     const bwipjs = (await import("bwip-js")).default;
     const canvas = document.createElement("canvas");
     bwipjs.toCanvas(canvas, {
