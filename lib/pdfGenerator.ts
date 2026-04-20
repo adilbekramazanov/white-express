@@ -80,7 +80,7 @@ async function buildBarcode(text: string): Promise<HTMLCanvasElement | null> {
 async function renderLabelCanvas(data: LabelData): Promise<HTMLCanvasElement> {
   const W = mm(148);
   const H = mm(210);
-  const MAR = mm(10);       // slightly tighter margin to give content more room
+  const MAR = mm(7);
   const CW = W - 2 * MAR;
   const FONT = '"Inter", "Segoe UI", Arial, sans-serif';
 
@@ -99,8 +99,8 @@ async function renderLabelCanvas(data: LabelData): Promise<HTMLCanvasElement> {
   let sectionBottomY = MAR;
 
   if (logo) {
-    const MAX_W = W - mm(8);
-    const MAX_H = mm(20);
+    const MAX_W = W - mm(4);
+    const MAX_H = mm(26);
     const ar = logo.naturalWidth / logo.naturalHeight;
     let lw = MAX_W, lh = lw / ar;
     if (lh > MAX_H) { lh = MAX_H; lw = lh * ar; }
