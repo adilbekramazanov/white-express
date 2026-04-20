@@ -62,11 +62,11 @@ async function buildBarcode(text: string): Promise<HTMLCanvasElement | null> {
     bwipjs.toCanvas(canvas, {
       bcid: "code128",
       text,
-      scale: 6,
-      height: 42,
+      scale: 5,
+      height: 36,
       includetext: true,
       textxalign: "center",
-      textsize: 18,
+      textsize: 14,
       textgaps: 2,
     });
     return canvas;
@@ -99,8 +99,8 @@ async function renderLabelCanvas(data: LabelData): Promise<HTMLCanvasElement> {
   let sectionBottomY = MAR;
 
   if (logo) {
-    const MAX_W = W - mm(8);  // almost full page width
-    const MAX_H = mm(57);     // 2.6× the previous 22 mm
+    const MAX_W = W - mm(8);
+    const MAX_H = mm(20);
     const ar = logo.naturalWidth / logo.naturalHeight;
     let lw = MAX_W, lh = lw / ar;
     if (lh > MAX_H) { lh = MAX_H; lw = lh * ar; }
@@ -122,7 +122,7 @@ async function renderLabelCanvas(data: LabelData): Promise<HTMLCanvasElement> {
   const barcodeCanvas = await buildBarcode(data.orderNumber);
   const barcodeY = sectionBottomY + mm(1);
   const BC_MAX_W = CW;
-  const BC_MAX_H = mm(44);
+  const BC_MAX_H = mm(36);
 
   if (barcodeCanvas) {
     const ar = barcodeCanvas.width / barcodeCanvas.height;
@@ -150,19 +150,19 @@ async function renderLabelCanvas(data: LabelData): Promise<HTMLCanvasElement> {
 
   // ── Order badge ────────────────────────────────────────────────────────────
   const badgeY = divY + mm(2);
-  const BADGE_H = mm(15);
+  const BADGE_H = mm(12);
   roundRect(ctx, MAR, badgeY, CW, BADGE_H, mm(2), "#F1F5F9");
 
   ctx.textBaseline = "middle";
   const badgeMid = badgeY + BADGE_H / 2;
 
   ctx.fillStyle = "#64748B";
-  ctx.font = `bold ${pt(12)}px ${FONT}`;
+  ctx.font = `bold ${pt(10)}px ${FONT}`;
   ctx.textAlign = "left";
   ctx.fillText("ЗАКАЗ", MAR + mm(4), badgeMid);
 
   ctx.fillStyle = "#1E293B";
-  ctx.font = `bold ${pt(12)}px ${FONT}`;
+  ctx.font = `bold ${pt(10)}px ${FONT}`;
   ctx.textAlign = "right";
   ctx.fillText(`#${data.orderNumber}`, W - MAR - mm(4), badgeMid);
 
@@ -180,12 +180,12 @@ async function renderLabelCanvas(data: LabelData): Promise<HTMLCanvasElement> {
     { label: "АДРЕС",    value: data.address },
   ];
 
-  const LABEL_COL   = mm(33);
+  const LABEL_COL   = mm(30);
   const VALUE_MAX_W = CW - LABEL_COL - mm(3);
-  const ROW_FONT_PX = pt(15);
-  const LABEL_FONT_PX = pt(11);
-  const LINE_H  = mm(10);
-  const ROW_PAD = mm(5);
+  const ROW_FONT_PX = pt(13);
+  const LABEL_FONT_PX = pt(9);
+  const LINE_H  = mm(9);
+  const ROW_PAD = mm(4);
 
   let curY = badgeY + BADGE_H + mm(4);
   ctx.textBaseline = "alphabetic";
@@ -207,7 +207,7 @@ async function renderLabelCanvas(data: LabelData): Promise<HTMLCanvasElement> {
     }
     if (line) lines.push(line);
 
-    const rowH = Math.max(lines.length * LINE_H, mm(13));
+    const rowH = Math.max(lines.length * LINE_H, mm(14));
 
     // Zebra stripe
     if (idx % 2 === 0) {
