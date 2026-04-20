@@ -25,22 +25,6 @@ const INITIAL: LabelData = {
   address: "",
 };
 
-function formatPhone(raw: string): string {
-  const digits = raw.replace(/\D/g, "").slice(0, 11);
-  if (digits.length === 0) return "";
-  const d = digits.startsWith("7") ? digits : "7" + digits.slice(0, 10);
-  const n = d.slice(0, 11);
-  let result = "+7";
-  if (n.length > 1) result += ` (${n.slice(1, 4)}`;
-  if (n.length >= 4) result += `) ${n.slice(4, 7)}`;
-  if (n.length >= 7) result += `-${n.slice(7, 9)}`;
-  if (n.length >= 9) result += `-${n.slice(9, 11)}`;
-  return result;
-}
-
-function extractDigits(formatted: string): string {
-  return formatted.replace(/\D/g, "");
-}
 
 const FIELD_ICONS: Record<keyof LabelData, React.ReactNode> = {
   orderNumber: <Hash size={15} />,
@@ -62,30 +46,10 @@ export default function ShippingForm() {
 
   const handleChange = useCallback(
     (key: keyof LabelData, value: string) => {
-      if (key === "phone") {
-        const digits = extractDigits(value);
-        setForm((prev) => ({ ...prev, phone: formatPhone(digits) }));
-      } else {
-        setForm((prev) => ({ ...prev, [key]: value }));
-      }
+      setForm((prev) => ({ ...prev, [key]: value }));
       if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
     },
     [errors]
-  );
-
-  // Intercept Backspace on the phone field so the cursor never gets
-  // stranded on a formatting character like ")" or "-".
-  // We always operate on the raw digit string, then reformat.
-  const handlePhoneKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key !== "Backspace") return;
-      e.preventDefault();
-      const digits = extractDigits(form.phone);
-      const trimmed = digits.length <= 1 ? "" : digits.slice(0, -1);
-      setForm((prev) => ({ ...prev, phone: formatPhone(trimmed) }));
-      if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }));
-    },
-    [form.phone, errors.phone]
   );
 
   const validate = (): boolean => {
@@ -95,7 +59,7 @@ export default function ShippingForm() {
     if (!form.storeName.trim()) newErrors.storeName = f.required;
     if (!form.clientName.trim()) newErrors.clientName = f.required;
     if (!form.address.trim()) newErrors.address = f.required;
-    if (extractDigits(form.phone).length < 11) newErrors.phone = f.phoneError;
+    if (!form.phone.trim()) newErrors.phone = f.required;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -172,10 +136,9 @@ export default function ShippingForm() {
                     ) : (
                       <input
                         id={key}
-                        type={isPhone ? "tel" : "text"}
+                        type="text"
                         value={form[key]}
                         onChange={(e) => handleChange(key, e.target.value)}
-                        onKeyDown={isPhone ? handlePhoneKeyDown : undefined}
                         placeholder={fieldTr.placeholder}
                         className={inputCls}
                         autoComplete="off"
